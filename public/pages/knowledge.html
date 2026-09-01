@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knowledge — BizMate</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="shell">
+    <nav class="topnav">
+      <span class="brand">BizMate</span>
+      <a href="dashboard.html">My Business</a>
+      <a href="products.html">Products</a>
+      <a href="knowledge.html" class="active">Knowledge</a>
+    </nav>
+
+    <div class="content">
+      <div class="page-title">Knowledge</div>
+      <div class="page-subtitle">FAQs and general instructions your assistant will use to answer customers — and nothing else.</div>
+
+      <div class="form-card">
+        <h3 id="form-title">Add knowledge</h3>
+        <form id="knowledge-form">
+          <input type="hidden" id="edit-id" />
+          <label for="type">Type</label>
+          <select id="type">
+            <option value="faq">FAQ (question &amp; answer)</option>
+            <option value="instruction">General instruction</option>
+          </select>
+
+          <div id="faq-fields">
+            <label for="question">Question</label>
+            <input id="question" type="text" placeholder="e.g. How much does delivery cost?" />
+            <label for="answer">Answer</label>
+            <textarea id="answer" rows="2" placeholder="e.g. Delivery within Lilongwe costs MWK 2,000."></textarea>
+          </div>
+
+          <div id="instruction-fields" style="display:none">
+            <label for="content">Instruction</label>
+            <textarea id="content" rows="3" placeholder="e.g. Always mention we're open on Sundays for pre-orders only."></textarea>
+          </div>
+
+          <label for="file">Attach a file (optional — e.g. a price list PDF)</label>
+          <input id="file" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" class="file-input" />
+
+          <button type="submit" id="submit-btn">Add</button>
+          <button type="button" id="cancel-edit" class="small-btn secondary-btn" style="display:none; margin-top:8px; width:100%;">Cancel edit</button>
+          <div class="error-text" id="error-text"></div>
+        </form>
+      </div>
+
+      <div class="item-list" id="knowledge-list"></div>
+      <div class="empty-state" id="empty-state" style="display:none">Nothing here yet — add your first FAQ or instruction above.</div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/knowledge.js"></script>
+</body>
+</html>

@@ -60,6 +60,7 @@ create table products (
   category text not null default '',
   availability text not null default 'available' check (availability in ('available', 'unavailable')),
   enabled boolean not null default true,
+  image_url text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -73,6 +74,7 @@ create table knowledge_items (
   answer text,
   content text,
   enabled boolean not null default true,
+  file_url text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

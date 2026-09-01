@@ -11,7 +11,7 @@ Read **agent.md** first — it explains the stack choices (adapted for a
 no-build-toolchain / Termux dev environment) and current phase status.
 Read **db/schema.sql** for the full data model.
 
-## Status: Phase 1 complete
+## Status: Phase 2 complete
 
 - Project scaffolding (Worker + static frontend, no bundler)
 - Postgres schema on Supabase (`db/schema.sql`)
@@ -21,10 +21,14 @@ Read **db/schema.sql** for the full data model.
 - Business creation with proper tenant isolation (`business_members` +
   server-side `business_id` resolution — see
   `worker/src/middleware/requireBusiness.js`)
+- Products/services CRUD with photo upload
+- Knowledge (FAQs + instructions) CRUD with optional file attachment
+- File uploads via Supabase Storage signed URLs — the browser uploads
+  directly to Supabase; the Worker only ever hands out a scoped,
+  time-limited permission slip (see `worker/src/routes/uploads.js`)
 
-Not yet built: products/knowledge management, the assistant engine, test
-chat, conversations/handoff, WhatsApp webhook. See `agent.md` for the phase
-list.
+Not yet built: the assistant engine, test chat, conversations/handoff,
+WhatsApp webhook. See `agent.md` for the phase list.
 
 ## One-time setup
 
@@ -41,6 +45,10 @@ list.
      **service_role key** (not the anon key — the Worker needs service_role
      to bypass RLS as the trusted server; see the note at the bottom of
      `db/schema.sql`).
+   - **Storage** → Create a new bucket named exactly `bizmate` → mark it
+     **Public**. That's it — no policies needed, since the Worker always
+     signs uploads with the service_role key (which bypasses RLS/policies
+     entirely), and a public bucket serves reads with no auth required.
 
 3. **Configure the Worker**:
    ```

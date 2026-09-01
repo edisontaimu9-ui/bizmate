@@ -36,15 +36,24 @@ bundler step. BizMate follows the same pattern:
   Firebase Storage needed. Frontend gets an ID token, sends it as
   `Authorization: Bearer <token>` to the Worker, which verifies it via
   Google's public JWKs (see `worker/src/lib/verifyIdToken.js`).
+- **File storage**: Supabase Storage, bucket named `bizmate` (public). The
+  Worker generates signed upload URLs scoped to `<products|knowledge>s/<business_id>/...`
+  (see `worker/src/lib/supabaseStorage.js` and `worker/src/routes/uploads.js`) —
+  the browser uploads bytes directly to Supabase, the Worker never handles
+  raw file data. This exists specifically because Firebase Storage wasn't
+  available in this account; since Supabase was already the database, it's
+  storage too, one fewer service to manage.
 - **LLM**: provider-agnostic wrapper in `worker/src/lib/llm.js`. Swap models
   by changing one function.
 - **WhatsApp**: official WhatsApp Cloud API only. Webhook lives at
   `worker/src/routes/whatsappWebhook.js`.
 
-If a future session is tempted to add Next.js, Vite, Supabase, or any step
-requiring `npm run build` to produce the *shipped* frontend — stop and check
-with the developer first. Cloudflare Wrangler CLI itself is fine to run from
-Termux (it's pure JS / small binary), but a heavy React build chain is not.
+If a future session is tempted to add Next.js, Vite, or any step requiring
+`npm run build` to produce the *shipped frontend* — stop and check with the
+developer first. Cloudflare Wrangler CLI itself is fine to run from Termux
+(it's pure JS / small binary), and so is talking to Supabase over plain
+`fetch()` (no SDK needed, see `worker/src/lib/supabase.js` and
+`supabaseStorage.js`) — but a heavy React build chain is not.
 
 ## Multi-tenancy rule (non-negotiable)
 Every Postgres table that holds business data includes `business_id`.
@@ -53,8 +62,9 @@ Every Worker route that reads/writes business data first resolves
 supplied field, query param, or body value. See `worker/src/middleware/requireBusiness.js`.
 
 ## Phases (see PLAN.md for detail)
-- [x] Phase 1: project setup, Firestore schema, auth (signup/login/business creation)
-- [ ] Phase 2: products/services + knowledge management
+- [x] Phase 1: project setup, Postgres schema, auth (signup/login/business creation)
+- [x] Phase 2: products/services + knowledge management (incl. Supabase Storage
+      for product photos and knowledge file attachments)
 - [ ] Phase 3: assistant engine + test chat
 - [ ] Phase 4: conversations + messages + human handoff
 - [ ] Phase 5: WhatsApp Cloud API integration
