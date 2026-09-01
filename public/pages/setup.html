@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Set up your business — BizMate</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="card" style="max-width: 480px">
+      <div class="brand">Tell us about your business</div>
+      <div class="tagline">This is what your assistant will use to help your customers.</div>
+
+      <form id="setup-form">
+        <label for="name">Business name</label>
+        <input id="name" type="text" required />
+
+        <label for="description">What do you do?</label>
+        <textarea id="description" rows="3" placeholder="e.g. We sell shoes and repair services in Lilongwe"></textarea>
+
+        <label for="location">Location</label>
+        <input id="location" type="text" placeholder="e.g. Area 3, Lilongwe" />
+
+        <label for="phone">Contact phone</label>
+        <input id="phone" type="tel" placeholder="e.g. +265..." />
+
+        <button type="submit" id="submit-btn">Continue</button>
+        <div class="error-text" id="error-text"></div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="../js/setup.js"></script>
+</body>
+</html>

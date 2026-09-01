@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — BizMate</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="card">
+      <div class="brand" id="business-name">Loading…</div>
+      <div class="tagline">Your business assistant is ready.</div>
+      <p style="color:#6b7573; font-size:14px">
+        Products, Knowledge, Conversations, and WhatsApp screens land in the
+        next phases. This confirms your account + business are wired up end
+        to end.
+      </p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { firebaseConfig } from "../js/firebase-config.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    import { apiFetch } from "../js/api.js";
+
+    initializeApp(firebaseConfig);
+    onAuthStateChanged(getAuth(), async (user) => {
+      if (!user) return (window.location.href = "../index.html");
+      try {
+        const business = await apiFetch("/api/business");
+        document.getElementById("business-name").textContent = business.name;
+      } catch (err) {
+        document.getElementById("business-name").textContent = "Could not load business";
+      }
+    });
+  </script>
+</body>
+</html>

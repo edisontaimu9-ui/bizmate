@@ -1,0 +1,16 @@
+name = "bizmate-api"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# Non-secret config (safe to commit)
+[vars]
+FIREBASE_PROJECT_ID = "REPLACE_WITH_YOUR_FIREBASE_PROJECT_ID"
+SUPABASE_URL = "REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL"
+
+# Secrets — set these with:
+#   npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+#   npx wrangler secret put LLM_API_KEY
+#   npx wrangler secret put WHATSAPP_ACCESS_TOKEN
+#   npx wrangler secret put WHATSAPP_PHONE_NUMBER_ID
+#   npx wrangler secret put WHATSAPP_WEBHOOK_VERIFY_TOKEN
+# Do NOT put secret values in this file.
