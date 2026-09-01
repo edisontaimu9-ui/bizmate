@@ -11,7 +11,7 @@ Read **agent.md** first — it explains the stack choices (adapted for a
 no-build-toolchain / Termux dev environment) and current phase status.
 Read **db/schema.sql** for the full data model.
 
-## Status: Phase 2 complete
+## Status: Phase 3 complete
 
 - Project scaffolding (Worker + static frontend, no bundler)
 - Postgres schema on Supabase (`db/schema.sql`)
@@ -23,12 +23,14 @@ Read **db/schema.sql** for the full data model.
   `worker/src/middleware/requireBusiness.js`)
 - Products/services CRUD with photo upload
 - Knowledge (FAQs + instructions) CRUD with optional file attachment
-- File uploads via Supabase Storage signed URLs — the browser uploads
-  directly to Supabase; the Worker only ever hands out a scoped,
-  time-limited permission slip (see `worker/src/routes/uploads.js`)
+- File uploads via Supabase Storage signed URLs
+- Assistant engine: answers only from the business's own enabled products
+  and knowledge, refuses to invent details, flags when a human should take
+  over (`worker/src/lib/assistantContext.js`, `worker/src/routes/assistant.js`)
+- Test Chat dashboard page — try the assistant before WhatsApp is connected
 
-Not yet built: the assistant engine, test chat, conversations/handoff,
-WhatsApp webhook. See `agent.md` for the phase list.
+Not yet built: conversations/handoff persistence, WhatsApp webhook. See
+`agent.md` for the phase list.
 
 ## One-time setup
 
@@ -55,7 +57,11 @@ WhatsApp webhook. See `agent.md` for the phase list.
    cd worker
    npm install
    npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+   npx wrangler secret put LLM_API_KEY
    ```
+   Get an `LLM_API_KEY` from console.groq.com (free tier available) — or
+   any OpenAI-compatible provider, in which case also set `LLM_BASE_URL`
+   and `LLM_MODEL` in `wrangler.toml`.
    Edit `wrangler.toml` and set `FIREBASE_PROJECT_ID` and `SUPABASE_URL` to
    your real values.
 

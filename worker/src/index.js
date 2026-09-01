@@ -4,6 +4,7 @@ import { createBusiness, getBusiness, updateBusiness, updateBusinessSettings } f
 import { listProducts, createProduct, updateProduct, deleteProduct } from "./routes/products.js";
 import { listKnowledge, createKnowledge, updateKnowledge, deleteKnowledge } from "./routes/knowledge.js";
 import { signUpload } from "./routes/uploads.js";
+import { testChat } from "./routes/assistant.js";
 
 // path patterns support a single ":id" segment — enough for this API's shape.
 const routes = [
@@ -26,6 +27,8 @@ const routes = [
   ["DELETE", "/api/knowledge/:id", deleteKnowledge],
 
   ["POST", "/api/uploads/sign", signUpload],
+
+  ["POST", "/api/assistant/test-chat", testChat],
 ];
 
 function matchRoute(method, pathname) {

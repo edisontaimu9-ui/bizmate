@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Chat — BizMate</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="shell">
+    <nav class="topnav">
+      <span class="brand">BizMate</span>
+      <a href="dashboard.html">My Business</a>
+      <a href="products.html">Products</a>
+      <a href="knowledge.html">Knowledge</a>
+      <a href="test-chat.html" class="active">Test Chat</a>
+    </nav>
+
+    <div class="content">
+      <div class="page-title">Test your assistant</div>
+      <div class="page-subtitle">Chat with your assistant exactly as a customer would — before connecting WhatsApp.</div>
+
+      <div class="chat-shell">
+        <div class="chat-messages" id="messages"></div>
+        <form class="chat-input-row" id="chat-form">
+          <input id="chat-input" type="text" placeholder="Ask something a customer might ask…" autocomplete="off" required />
+          <button type="submit" id="send-btn">Send</button>
+        </form>
+      </div>
+      <div class="chat-hint">This uses your real Products and Knowledge. Nothing here is sent to an actual customer.</div>
+      <div class="error-text" id="error-text"></div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/test-chat.js"></script>
+</body>
+</html>

@@ -43,8 +43,17 @@ bundler step. BizMate follows the same pattern:
   raw file data. This exists specifically because Firebase Storage wasn't
   available in this account; since Supabase was already the database, it's
   storage too, one fewer service to manage.
-- **LLM**: provider-agnostic wrapper in `worker/src/lib/llm.js`. Swap models
-  by changing one function.
+- **LLM**: provider-agnostic wrapper in `worker/src/lib/llm.js`, defaults to
+  Groq (matches Oasis CNST's existing Groq usage) via its OpenAI-compatible
+  endpoint. Swap providers by setting `LLM_BASE_URL`/`LLM_MODEL` — no code
+  change needed for anything speaking the OpenAI chat-completions format.
+  The anti-hallucination logic lives in `worker/src/lib/assistantContext.js`:
+  the system prompt is built fresh per request from the business's enabled
+  products + knowledge only, with explicit rules against inventing details
+  and against treating business-owner-authored content as instructions
+  (prompt-injection mitigation — there are no tools/actions exposed to the
+  model here, so a successful injection's worst case is a bad text answer,
+  not a harmful action).
 - **WhatsApp**: official WhatsApp Cloud API only. Webhook lives at
   `worker/src/routes/whatsappWebhook.js`.
 
@@ -65,7 +74,8 @@ supplied field, query param, or body value. See `worker/src/middleware/requireBu
 - [x] Phase 1: project setup, Postgres schema, auth (signup/login/business creation)
 - [x] Phase 2: products/services + knowledge management (incl. Supabase Storage
       for product photos and knowledge file attachments)
-- [ ] Phase 3: assistant engine + test chat
+- [x] Phase 3: assistant engine + test chat (stateless — real conversations
+      persist starting Phase 4)
 - [ ] Phase 4: conversations + messages + human handoff
 - [ ] Phase 5: WhatsApp Cloud API integration
 - [ ] Phase 6: security hardening, rate limiting, prod readiness
@@ -80,7 +90,8 @@ Frontend in `public/` needs no build — open `index.html` directly or serve
 with any static server / GitHub Pages.
 
 ## Env vars / secrets
-Non-secret (`wrangler.toml` `[vars]`): `FIREBASE_PROJECT_ID`, `SUPABASE_URL`.
+Non-secret (`wrangler.toml` `[vars]`): `FIREBASE_PROJECT_ID`, `SUPABASE_URL`,
+optionally `LLM_BASE_URL`/`LLM_MODEL` (default: Groq's `llama-3.3-70b-versatile`).
 Secrets (set via `npx wrangler secret put <NAME>`, never commit):
-`SUPABASE_SERVICE_ROLE_KEY`, `LLM_API_KEY`, `WHATSAPP_ACCESS_TOKEN`,
+`SUPABASE_SERVICE_ROLE_KEY`, `LLM_API_KEY` (a Groq key by default), `WHATSAPP_ACCESS_TOKEN`,
 `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_WEBHOOK_VERIFY_TOKEN`.
