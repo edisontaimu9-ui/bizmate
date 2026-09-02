@@ -4,12 +4,15 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { apiFetch } from "./api.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 
 let mode = "signin"; // "signin" | "signup"
 
@@ -22,6 +25,7 @@ const submitBtn = document.getElementById("submit-btn");
 const errorText = document.getElementById("error-text");
 const switchLink = document.getElementById("switch-link");
 const switchCopy = document.getElementById("switch-copy");
+const googleBtn = document.getElementById("google-btn");
 
 switchLink.addEventListener("click", (e) => {
   e.preventDefault();
@@ -56,6 +60,28 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
+googleBtn.addEventListener("click", async () => {
+  hideError();
+  googleBtn.disabled = true;
+
+  try {
+    const { user } = await signInWithPopup(auth, googleProvider);
+    // Same as email signup: ensure our own `users` row exists before any
+    // business creation happens, since businesses.owner_uid has a foreign
+    // key to users(id). createProfile is idempotent — safe to call for a
+    // returning Google user too.
+    await apiFetch("/api/auth/profile", {
+      method: "POST",
+      body: { displayName: user.displayName || "" },
+    });
+    // onAuthStateChanged below handles redirect.
+  } catch (err) {
+    const msg = friendlyError(err);
+    if (msg) showError(msg);
+    googleBtn.disabled = false;
+  }
+});
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) return;
   try {
@@ -81,5 +107,7 @@ function friendlyError(err) {
   if (code.includes("invalid-credential") || code.includes("wrong-password")) return "Incorrect email or password.";
   if (code.includes("weak-password")) return "Password should be at least 6 characters.";
   if (code.includes("user-not-found")) return "No account found with this email.";
+  if (code.includes("popup-closed-by-user") || code.includes("cancelled-popup-request")) return "";
+  if (code.includes("popup-blocked")) return "Your browser blocked the sign-in popup. Please allow popups for this site and try again.";
   return err.message || "Something went wrong. Please try again.";
 }

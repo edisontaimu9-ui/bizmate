@@ -65,6 +65,28 @@ button:disabled { opacity: 0.6; cursor: default; }
 .switch-link { text-align: center; margin-top: 16px; font-size: 14px; color: var(--muted); }
 .switch-link a { color: var(--teal); text-decoration: none; font-weight: 600; }
 
+.divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--muted); font-size: 13px; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+.google-btn {
+  width: 100%;
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 0;
+}
+.google-btn:hover { background: #f7f8f7; }
+.google-btn:disabled { opacity: 0.6; cursor: default; }
+
 .error-text { color: var(--error); font-size: 13px; margin-top: 12px; display: none; }
 .error-text.visible { display: block; }
 
