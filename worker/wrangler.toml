@@ -8,7 +8,7 @@ FIREBASE_PROJECT_ID = "bizmate-3a18b"
 SUPABASE_URL = "https://jjtvgaubalixqfnwgdoq.supabase.co"
 # Optional — only needed if you're not using Groq's default model/endpoint.
 # LLM_BASE_URL = "https://api.groq.com/openai/v1"
-# LLM_MODEL = "llama-3.3-70b-versatile"
+# LLM_MODEL = "openai/gpt-oss-120b"
 
 # Secrets — set these with:
 #   npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY

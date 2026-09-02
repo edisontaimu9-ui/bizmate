@@ -91,7 +91,7 @@ with any static server / GitHub Pages.
 
 ## Env vars / secrets
 Non-secret (`wrangler.toml` `[vars]`): `FIREBASE_PROJECT_ID`, `SUPABASE_URL`,
-optionally `LLM_BASE_URL`/`LLM_MODEL` (default: Groq's `llama-3.3-70b-versatile`).
+optionally `LLM_BASE_URL`/`LLM_MODEL` (default: Groq's `openai/gpt-oss-120b`).
 Secrets (set via `npx wrangler secret put <NAME>`, never commit):
 `SUPABASE_SERVICE_ROLE_KEY`, `LLM_API_KEY` (a Groq key by default), `WHATSAPP_ACCESS_TOKEN`,
 `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_WEBHOOK_VERIFY_TOKEN`.

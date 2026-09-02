@@ -37,11 +37,7 @@ export async function testChat(request, env) {
     raw = await chatCompletion(env, { systemPrompt, messages, jsonMode: true });
   } catch (err) {
     console.error(err);
-    // TEMPORARY: surfacing the real error to the browser for debugging.
-    // Revert to the generic message below once LLM calls are confirmed
-    // working — don't ship upstream provider error text to real customers.
-    throw new HttpError(`DEBUG: ${err.message}`, 502);
-    // throw new HttpError("The assistant is temporarily unavailable. Please try again.", 502);
+    throw new HttpError("The assistant is temporarily unavailable. Please try again.", 502);
   }
 
   return json(parseAssistantOutput(raw));
