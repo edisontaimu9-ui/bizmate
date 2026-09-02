@@ -56,7 +56,18 @@ function matchRoute(method, pathname) {
 export default {
   async fetch(request, env, ctx) {
     if (request.method === "OPTIONS") {
-      return json({}, 204);
+      // A 204 response must not have a body — the Workers runtime throws if
+      // constructed with one (json() always sends a body). This was
+      // crashing every CORS preflight request, which broke every write
+      // endpoint (anything sending Authorization + Content-Type headers).
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "Authorization, Content-Type",
+          "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+        },
+      });
     }
 
     const url = new URL(request.url);
