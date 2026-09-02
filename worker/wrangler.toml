@@ -4,7 +4,7 @@ compatibility_date = "2024-11-01"
 
 # Non-secret config (safe to commit)
 [vars]
-FIREBASE_PROJECT_ID = "REPLACE_WITH_YOUR_FIREBASE_PROJECT_ID"
+FIREBASE_PROJECT_ID = "bizmate-3a18b"
 SUPABASE_URL = "REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL"
 # Optional — only needed if you're not using Groq's default model/endpoint.
 # LLM_BASE_URL = "https://api.groq.com/openai/v1"
