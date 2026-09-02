@@ -76,7 +76,16 @@ supplied field, query param, or body value. See `worker/src/middleware/requireBu
       for product photos and knowledge file attachments)
 - [x] Phase 3: assistant engine + test chat (stateless — real conversations
       persist starting Phase 4)
-- [ ] Phase 4: conversations + messages + human handoff
+- [x] Phase 4: conversations + messages + human handoff. Includes a
+      simulate-incoming-message dev tool (`POST /api/dev/simulate-message`,
+      owner-only) that walks the exact same customer -> conversation ->
+      assistant path the Phase 5 webhook will use — that's how this got
+      tested end-to-end without WhatsApp credentials. Handoff is automatic
+      (assistant sets status to "human" when it can't answer confidently)
+      as well as manual (owner taps "Take over"). Once status is "human"
+      the assistant stays silent until returned to "assistant" — enforced
+      in `worker/src/routes/simulate.js`, and the real webhook must follow
+      the same rule in Phase 5.
 - [ ] Phase 5: WhatsApp Cloud API integration
 - [ ] Phase 6: security hardening, rate limiting, prod readiness
 

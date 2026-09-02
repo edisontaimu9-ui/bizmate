@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversation — BizMate</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="shell">
+    <nav class="topnav">
+      <span class="brand">BizMate</span>
+      <a href="dashboard.html">My Business</a>
+      <a href="products.html">Products</a>
+      <a href="knowledge.html">Knowledge</a>
+      <a href="test-chat.html">Test Chat</a>
+      <a href="conversations.html" class="active">Conversations</a>
+    </nav>
+
+    <div class="content">
+      <div class="conv-header">
+        <div>
+          <h2 id="customer-name">Loading…</h2>
+          <span class="status-badge" id="status-badge"></span>
+        </div>
+        <div class="conv-controls" id="controls"></div>
+      </div>
+
+      <div class="chat-shell">
+        <div class="chat-messages" id="messages"></div>
+        <form class="chat-input-row" id="reply-form" style="display:none">
+          <input id="reply-input" type="text" placeholder="Reply to this customer…" autocomplete="off" required />
+          <button type="submit">Send</button>
+        </form>
+        <div class="chat-hint" id="reply-hint" style="padding: 12px; margin: 0;"></div>
+      </div>
+      <div class="error-text" id="error-text"></div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/conversation.js"></script>
+</body>
+</html>

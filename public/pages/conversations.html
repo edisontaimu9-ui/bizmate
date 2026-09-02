@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversations — BizMate</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="shell">
+    <nav class="topnav">
+      <span class="brand">BizMate</span>
+      <a href="dashboard.html">My Business</a>
+      <a href="products.html">Products</a>
+      <a href="knowledge.html">Knowledge</a>
+      <a href="test-chat.html">Test Chat</a>
+      <a href="conversations.html" class="active">Conversations</a>
+    </nav>
+
+    <div class="content">
+      <div class="page-title">Conversations</div>
+      <div class="page-subtitle">Customer conversations show up here once WhatsApp is connected. Until then, simulate one below.</div>
+
+      <div class="form-card">
+        <h3>Simulate an incoming message</h3>
+        <p class="simulate-note">No WhatsApp needed — this runs the exact same path a real customer message will, so you can test the full flow including handoff.</p>
+        <form id="simulate-form">
+          <label for="whatsapp-number">Customer's phone number</label>
+          <input id="whatsapp-number" type="tel" required placeholder="e.g. +265998706971" />
+
+          <label for="customer-name">Customer name (optional)</label>
+          <input id="customer-name" type="text" placeholder="e.g. Grace" />
+
+          <label for="sim-message">Message</label>
+          <textarea id="sim-message" rows="2" required placeholder="e.g. Do you have chicken?"></textarea>
+
+          <button type="submit" id="simulate-btn">Send simulated message</button>
+          <div class="error-text" id="sim-error"></div>
+        </form>
+      </div>
+
+      <div class="conv-list" id="conv-list"></div>
+      <div class="empty-state" id="empty-state" style="display:none">No conversations yet — simulate one above to see how it works.</div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/conversations.js"></script>
+</body>
+</html>

@@ -5,6 +5,13 @@ import { listProducts, createProduct, updateProduct, deleteProduct } from "./rou
 import { listKnowledge, createKnowledge, updateKnowledge, deleteKnowledge } from "./routes/knowledge.js";
 import { signUpload } from "./routes/uploads.js";
 import { testChat } from "./routes/assistant.js";
+import {
+  listConversations,
+  getConversation,
+  updateConversationStatus,
+  sendOwnerMessage,
+} from "./routes/conversations.js";
+import { simulateMessage } from "./routes/simulate.js";
 
 // path patterns support a single ":id" segment — enough for this API's shape.
 const routes = [
@@ -29,6 +36,13 @@ const routes = [
   ["POST", "/api/uploads/sign", signUpload],
 
   ["POST", "/api/assistant/test-chat", testChat],
+
+  ["GET", "/api/conversations", listConversations],
+  ["GET", "/api/conversations/:id", getConversation],
+  ["PATCH", "/api/conversations/:id", updateConversationStatus],
+  ["POST", "/api/conversations/:id/messages", sendOwnerMessage],
+
+  ["POST", "/api/dev/simulate-message", simulateMessage],
 ];
 
 function matchRoute(method, pathname) {

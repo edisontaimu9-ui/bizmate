@@ -11,26 +11,30 @@ Read **agent.md** first — it explains the stack choices (adapted for a
 no-build-toolchain / Termux dev environment) and current phase status.
 Read **db/schema.sql** for the full data model.
 
-## Status: Phase 3 complete
+## Status: Phase 4 complete
 
 - Project scaffolding (Worker + static frontend, no bundler)
 - Postgres schema on Supabase (`db/schema.sql`)
-- Firebase Auth (email/password) on the frontend — Auth only, no Firestore,
-  no Firebase Storage
-- Worker-side ID token verification (`worker/src/lib/verifyIdToken.js`)
-- Business creation with proper tenant isolation (`business_members` +
-  server-side `business_id` resolution — see
-  `worker/src/middleware/requireBusiness.js`)
+- Firebase Auth (email/password + Google) — Auth only, no Firestore, no
+  Firebase Storage
+- Business creation with proper tenant isolation
 - Products/services CRUD with photo upload
 - Knowledge (FAQs + instructions) CRUD with optional file attachment
 - File uploads via Supabase Storage signed URLs
 - Assistant engine: answers only from the business's own enabled products
-  and knowledge, refuses to invent details, flags when a human should take
-  over (`worker/src/lib/assistantContext.js`, `worker/src/routes/assistant.js`)
-- Test Chat dashboard page — try the assistant before WhatsApp is connected
+  and knowledge, refuses to invent details
+- Test Chat dashboard page
+- Conversations + messages persisted to Postgres; a Conversations dashboard
+  page (list + thread view) with human handoff — take over, reply
+  yourself, return to the assistant, or close
+- A **simulate incoming message** tool (dashboard: Conversations page) that
+  exercises the full customer → conversation → assistant → handoff pipeline
+  without needing WhatsApp credentials — useful for proving Phase 4 works
+  and will keep being useful for testing after Phase 5 connects real
+  WhatsApp traffic
 
-Not yet built: conversations/handoff persistence, WhatsApp webhook. See
-`agent.md` for the phase list.
+Not yet built: the real WhatsApp Cloud API webhook. See `agent.md` for the
+phase list.
 
 ## One-time setup
 

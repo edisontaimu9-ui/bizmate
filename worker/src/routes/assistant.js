@@ -2,15 +2,18 @@ import { requireAuth } from "../middleware/requireAuth.js";
 import { requireBusiness } from "../middleware/requireBusiness.js";
 import { buildBusinessContext, buildSystemPrompt } from "../lib/assistantContext.js";
 import { chatCompletion } from "../lib/llm.js";
+import { parseAssistantOutput } from "../lib/assistantReply.js";
 import { json, HttpError } from "../lib/http.js";
 
 const MAX_HISTORY_MESSAGES = 12; // keep prompts small and cheap
 
 // POST /api/assistant/test-chat
 // { message, history: [{ role: "user"|"assistant", content }, ...] }
-// Stateless — the dashboard's test chat keeps history client-side. Real
-// customer conversations (Phase 4+) persist to `messages` and will load
-// history from there instead of the client.
+// Stateless — the dashboard's test chat keeps history client-side, unlike
+// real conversations (Phase 4+) which persist to `messages`. Unlike the
+// simulate/webhook path, this one intentionally surfaces real LLM errors
+// (502 + message) rather than degrading gracefully — it's an owner-facing
+// debugging tool, not customer-facing.
 export async function testChat(request, env) {
   const { uid } = await requireAuth(request, env);
   const businessId = await requireBusiness(env, uid);
@@ -41,22 +44,4 @@ export async function testChat(request, env) {
   }
 
   return json(parseAssistantOutput(raw));
-}
-
-function parseAssistantOutput(raw) {
-  try {
-    const data = JSON.parse(raw);
-    if (typeof data.reply === "string") {
-      return { reply: data.reply, needsHuman: Boolean(data.needsHuman) };
-    }
-  } catch {
-    // fall through to the safe default below
-  }
-  // Model didn't return valid JSON — fail safe rather than showing broken
-  // output to a customer.
-  const fallback = raw?.trim();
-  return {
-    reply: fallback || "I'm having trouble answering right now — let me connect you with someone from the business.",
-    needsHuman: !fallback,
-  };
 }
