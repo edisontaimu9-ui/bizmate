@@ -77,5 +77,5 @@ ${knowledgeBlock}
 
 RESPONSE FORMAT:
 Respond with ONLY valid JSON, no other text: {"reply": "<your message to the customer>", "needsHuman": true|false}
-Set needsHuman to true only when rule 2 or rule 5 applies.`;
+needsHuman defaults to false. Only set it to true when you are genuinely missing information needed to answer (rule 2), or the customer explicitly asked for a human / seems frustrated / the request is out of scope (rule 5). If BUSINESS DATA contains the answer and you gave it, needsHuman is false — a correct, complete answer is never a reason for handoff.`;
 }
