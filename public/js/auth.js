@@ -46,14 +46,10 @@ form.addEventListener("submit", async (e) => {
   try {
     if (mode === "signup") {
       await createUserWithEmailAndPassword(auth, emailEl.value, passwordEl.value);
-      await apiFetch("/api/auth/profile", {
-        method: "POST",
-        body: { displayName: displayNameEl.value },
-      });
     } else {
       await signInWithEmailAndPassword(auth, emailEl.value, passwordEl.value);
     }
-    // onAuthStateChanged below handles redirect once Firebase confirms the session.
+    // onAuthStateChanged below ensures the profile row exists and redirects.
   } catch (err) {
     showError(friendlyError(err));
     submitBtn.disabled = false;
@@ -65,16 +61,8 @@ googleBtn.addEventListener("click", async () => {
   googleBtn.disabled = true;
 
   try {
-    const { user } = await signInWithPopup(auth, googleProvider);
-    // Same as email signup: ensure our own `users` row exists before any
-    // business creation happens, since businesses.owner_uid has a foreign
-    // key to users(id). createProfile is idempotent — safe to call for a
-    // returning Google user too.
-    await apiFetch("/api/auth/profile", {
-      method: "POST",
-      body: { displayName: user.displayName || "" },
-    });
-    // onAuthStateChanged below handles redirect.
+    await signInWithPopup(auth, googleProvider);
+    // onAuthStateChanged below ensures the profile row exists and redirects.
   } catch (err) {
     const msg = friendlyError(err);
     if (msg) showError(msg);
@@ -84,6 +72,25 @@ googleBtn.addEventListener("click", async () => {
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) return;
+
+  // Ensure our own `users` row exists before anything else — runs on EVERY
+  // sign-in (not just signup), so an account that ended up authenticated
+  // in Firebase without a matching profile row (e.g. from a transient
+  // backend error during signup) self-heals here instead of staying
+  // permanently broken. createProfile is idempotent: a no-op if the row
+  // already exists.
+  try {
+    await apiFetch("/api/auth/profile", {
+      method: "POST",
+      body: { displayName: displayNameEl.value || user.displayName || "" },
+    });
+  } catch (err) {
+    showError(`Couldn't set up your account: ${err.message}`);
+    submitBtn.disabled = false;
+    googleBtn.disabled = false;
+    return;
+  }
+
   try {
     // Does this account already have a business? If yes, go to the dashboard.
     // If not, send them to business setup. A 404 from /api/business means "no business yet".
