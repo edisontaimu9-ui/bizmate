@@ -13,4 +13,4 @@ export const firebaseConfig = {
 
 // Point this at your deployed Worker (or http://localhost:8787 during
 // `wrangler dev`).
-export const API_BASE_URL = "https://bizmate-api.YOUR-SUBDOMAIN.workers.dev";
+export const API_BASE_URL = "https://bizmate.edisontaimu9.workers.dev";
