@@ -12,6 +12,8 @@ import {
   sendOwnerMessage,
 } from "./routes/conversations.js";
 import { simulateMessage } from "./routes/simulate.js";
+import { getWhatsAppAccount, updateWhatsAppAccount } from "./routes/whatsappAccount.js";
+import { verifyWebhook, receiveWebhook } from "./routes/whatsappWebhook.js";
 
 // path patterns support a single ":id" segment — enough for this API's shape.
 const routes = [
@@ -43,6 +45,14 @@ const routes = [
   ["POST", "/api/conversations/:id/messages", sendOwnerMessage],
 
   ["POST", "/api/dev/simulate-message", simulateMessage],
+
+  ["GET", "/api/whatsapp", getWhatsAppAccount],
+  ["PATCH", "/api/whatsapp", updateWhatsAppAccount],
+
+  // Public — no bearer token. Meta calls these directly; auth is via the
+  // verify token (GET) and X-Hub-Signature-256 (POST) instead.
+  ["GET", "/webhooks/whatsapp", verifyWebhook],
+  ["POST", "/webhooks/whatsapp", receiveWebhook],
 ];
 
 function matchRoute(method, pathname) {

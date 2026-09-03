@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp — BizMate</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="shell">
+    <nav class="topnav">
+      <span class="brand">BizMate</span>
+      <a href="dashboard.html">My Business</a>
+      <a href="products.html">Products</a>
+      <a href="knowledge.html">Knowledge</a>
+      <a href="test-chat.html">Test Chat</a>
+      <a href="conversations.html">Conversations</a>
+      <a href="whatsapp.html" class="active">WhatsApp</a>
+    </nav>
+
+    <div class="content">
+      <div class="page-title">WhatsApp</div>
+      <div class="page-subtitle">Connect your business to a real WhatsApp number so customers can message you directly.</div>
+
+      <div class="form-card">
+        <h3>Connection status</h3>
+        <p id="status-line" style="margin-top: 6px;">Loading…</p>
+      </div>
+
+      <div class="form-card">
+        <h3>1. Set up the webhook in Meta's dashboard</h3>
+        <p style="color:#6b7573; font-size:14px;">In your Meta app's WhatsApp → Configuration settings, enter:</p>
+        <p style="margin-bottom:2px; font-size:13px; font-weight:600;">Callback URL</p>
+        <code class="code-inline">https://bizmate.edisontaimu9.workers.dev/webhooks/whatsapp</code>
+        <p style="margin-bottom:2px; font-size:13px; font-weight:600;">Verify token</p>
+        <p style="font-size:14px; color:#6b7573;">Whatever value you set as the <code>WHATSAPP_WEBHOOK_VERIFY_TOKEN</code> secret in Cloudflare — must match exactly.</p>
+        <p style="font-size:14px; color:#6b7573; margin-top:10px;">Then subscribe the webhook to the <strong>messages</strong> field.</p>
+      </div>
+
+      <div class="form-card">
+        <h3>2. Save your Phone Number ID here</h3>
+        <p style="color:#6b7573; font-size:14px; margin-bottom: 14px;">
+          Found in Meta's dashboard under WhatsApp → API Setup — either your free test number (to start) or your registered business number later.
+        </p>
+        <form id="whatsapp-form">
+          <label for="phone-number-id">Phone Number ID</label>
+          <input id="phone-number-id" type="text" required placeholder="e.g. 123456789012345" />
+
+          <label for="waba-id">WhatsApp Business Account ID (optional)</label>
+          <input id="waba-id" type="text" placeholder="e.g. 987654321098765" />
+
+          <button type="submit" id="save-btn">Save connection</button>
+          <div class="error-text" id="error-text"></div>
+        </form>
+      </div>
+
+      <div class="form-card">
+        <h3>3. Test it</h3>
+        <p style="color:#6b7573; font-size:14px;">
+          In Meta's dashboard, add your own phone as a test recipient, then message your test number on WhatsApp directly. It should reach this business's assistant exactly like the Conversations page's simulate tool does — check <a href="conversations.html">Conversations</a> to see it arrive.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/whatsapp.js"></script>
+</body>
+</html>

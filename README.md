@@ -11,7 +11,7 @@ Read **agent.md** first — it explains the stack choices (adapted for a
 no-build-toolchain / Termux dev environment) and current phase status.
 Read **db/schema.sql** for the full data model.
 
-## Status: Phase 4 complete
+## Status: Phase 5 complete
 
 - Project scaffolding (Worker + static frontend, no bundler)
 - Postgres schema on Supabase (`db/schema.sql`)
@@ -27,14 +27,37 @@ Read **db/schema.sql** for the full data model.
 - Conversations + messages persisted to Postgres; a Conversations dashboard
   page (list + thread view) with human handoff — take over, reply
   yourself, return to the assistant, or close
-- A **simulate incoming message** tool (dashboard: Conversations page) that
-  exercises the full customer → conversation → assistant → handoff pipeline
-  without needing WhatsApp credentials — useful for proving Phase 4 works
-  and will keep being useful for testing after Phase 5 connects real
-  WhatsApp traffic
+- A **simulate incoming message** tool (Conversations page) that exercises
+  the full pipeline without needing WhatsApp credentials
+- **Real WhatsApp Cloud API integration**: a public webhook
+  (`worker/src/routes/whatsappWebhook.js`) that verifies with Meta,
+  authenticates inbound requests via X-Hub-Signature-256 (not a bearer
+  token, since Meta doesn't send one), and shares the exact same
+  persistence/handoff/reply pipeline the simulate tool uses. A WhatsApp
+  dashboard page to connect a business's Meta Phone Number ID.
 
-Not yet built: the real WhatsApp Cloud API webhook. See `agent.md` for the
-phase list.
+Not yet built: Phase 6 (security hardening, rate limiting, production
+readiness). See `agent.md` for details.
+
+## Connecting WhatsApp (Phase 5 setup — beyond the one-time setup below)
+
+1. Create a Meta app at developers.facebook.com, add the WhatsApp product.
+   Meta auto-generates a free test phone number — no real SIM needed to
+   start.
+2. In the app's WhatsApp → Configuration settings, set the webhook:
+   - **Callback URL**: `https://<your-worker>.workers.dev/webhooks/whatsapp`
+   - **Verify token**: any value you choose — set the same value as the
+     `WHATSAPP_WEBHOOK_VERIFY_TOKEN` secret below
+   - Subscribe to the **messages** field
+3. Set the Worker secrets (see step 3 below) — `WHATSAPP_ACCESS_TOKEN` and
+   `WHATSAPP_PHONE_NUMBER_ID` come from the same WhatsApp → API Setup page;
+   `WHATSAPP_APP_SECRET` comes from App Settings → Basic.
+4. In the app, add your own phone number as a test recipient (WhatsApp →
+   API Setup → "To" field management).
+5. On the BizMate dashboard's **WhatsApp** page, paste in the Phone Number
+   ID and save — this tells BizMate which business owns that number.
+6. Message the test number from your own WhatsApp. It should show up in
+   **Conversations** and get a real reply back on WhatsApp.
 
 ## One-time setup
 
@@ -68,6 +91,13 @@ phase list.
    and `LLM_MODEL` in `wrangler.toml`.
    Edit `wrangler.toml` and set `FIREBASE_PROJECT_ID` and `SUPABASE_URL` to
    your real values.
+   For WhatsApp (see the dedicated section below for the full flow):
+   ```
+   npx wrangler secret put WHATSAPP_ACCESS_TOKEN
+   npx wrangler secret put WHATSAPP_PHONE_NUMBER_ID
+   npx wrangler secret put WHATSAPP_WEBHOOK_VERIFY_TOKEN
+   npx wrangler secret put WHATSAPP_APP_SECRET
+   ```
 
 4. **Run locally**:
    ```

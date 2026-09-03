@@ -15,5 +15,6 @@ SUPABASE_URL = "https://jjtvgaubalixqfnwgdoq.supabase.co"
 #   npx wrangler secret put LLM_API_KEY          (a Groq API key by default)
 #   npx wrangler secret put WHATSAPP_ACCESS_TOKEN
 #   npx wrangler secret put WHATSAPP_PHONE_NUMBER_ID
-#   npx wrangler secret put WHATSAPP_WEBHOOK_VERIFY_TOKEN
+#   npx wrangler secret put WHATSAPP_WEBHOOK_VERIFY_TOKEN   (a value YOU choose — must match what you enter in Meta's dashboard)
+#   npx wrangler secret put WHATSAPP_APP_SECRET             (from Meta app dashboard > App settings > Basic — verifies inbound webhook requests are really from Meta)
 # Do NOT put secret values in this file.

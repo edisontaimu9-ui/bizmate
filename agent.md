@@ -78,15 +78,29 @@ supplied field, query param, or body value. See `worker/src/middleware/requireBu
       persist starting Phase 4)
 - [x] Phase 4: conversations + messages + human handoff. Includes a
       simulate-incoming-message dev tool (`POST /api/dev/simulate-message`,
-      owner-only) that walks the exact same customer -> conversation ->
-      assistant path the Phase 5 webhook will use — that's how this got
-      tested end-to-end without WhatsApp credentials. Handoff is automatic
-      (assistant sets status to "human" when it can't answer confidently)
-      as well as manual (owner taps "Take over"). Once status is "human"
-      the assistant stays silent until returned to "assistant" — enforced
-      in `worker/src/routes/simulate.js`, and the real webhook must follow
-      the same rule in Phase 5.
-- [ ] Phase 5: WhatsApp Cloud API integration
+      owner-only) that walks the same customer -> conversation -> assistant
+      path the real webhook uses — that's how this got tested end-to-end
+      before WhatsApp credentials existed. Handoff is automatic (assistant
+      sets status to "human" when it can't answer confidently) as well as
+      manual (owner taps "Take over"). Once status is "human" the assistant
+      stays silent until returned to "assistant" — enforced once, in the
+      shared `worker/src/lib/inboundMessage.js` pipeline (see Phase 5).
+- [x] Phase 5: WhatsApp Cloud API integration. Real webhook at
+      `worker/src/routes/whatsappWebhook.js` — verification handshake (GET)
+      + inbound message handling (POST), authenticated via
+      X-Hub-Signature-256 HMAC (`worker/src/lib/whatsappSignature.js`)
+      since Meta doesn't send a bearer token. Shares its core pipeline with
+      the Phase 4 simulate tool via `worker/src/lib/inboundMessage.js` — one
+      place decides persistence/handoff/reply logic, not two. Outbound
+      sending via `worker/src/lib/whatsapp.js`. A business connects by
+      saving its Meta Phone Number ID on the WhatsApp dashboard page
+      (`public/pages/whatsapp.html`) — this only records BizMate's own
+      mapping from phone_number_id -> business, it does NOT perform actual
+      Meta registration (that's still done in Meta's own dashboard).
+      Currently single-tenant on the WhatsApp side: one global
+      WHATSAPP_ACCESS_TOKEN/WHATSAPP_PHONE_NUMBER_ID for the whole Worker,
+      fine for one connected business/test number — a real multi-tenant
+      version would need per-business tokens.
 - [ ] Phase 6: security hardening, rate limiting, prod readiness
 
 ## Local dev / deploy (run these on-device, not in this chat's sandbox)
@@ -103,4 +117,5 @@ Non-secret (`wrangler.toml` `[vars]`): `FIREBASE_PROJECT_ID`, `SUPABASE_URL`,
 optionally `LLM_BASE_URL`/`LLM_MODEL` (default: Groq's `openai/gpt-oss-120b`).
 Secrets (set via `npx wrangler secret put <NAME>`, never commit):
 `SUPABASE_SERVICE_ROLE_KEY`, `LLM_API_KEY` (a Groq key by default), `WHATSAPP_ACCESS_TOKEN`,
-`WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_WEBHOOK_VERIFY_TOKEN`.
+`WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_WEBHOOK_VERIFY_TOKEN` (a value you choose yourself),
+`WHATSAPP_APP_SECRET` (from Meta app dashboard — verifies inbound webhook requests).

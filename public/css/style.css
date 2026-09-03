@@ -207,4 +207,18 @@ button:disabled { opacity: 0.6; cursor: default; }
 
 .simulate-note { font-size: 13px; color: var(--muted); margin-top: -8px; margin-bottom: 16px; }
 
+.code-inline {
+  display: block;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: monospace;
+  font-size: 13px;
+  margin: 6px 0 14px;
+  word-break: break-all;
+}
+.setup-steps { padding-left: 20px; font-size: 14px; line-height: 1.6; }
+.setup-steps li { margin-bottom: 10px; }
+
 
